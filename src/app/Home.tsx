@@ -20,7 +20,7 @@ function Home() {
       <BrandSection
         title="Maillots Liverpool Fc 25/26"
         description="Réunis. Déterminés."
-        imageUrl="../src/assets/images/liverpool_2.jpg"
+        imageUrl="./images/liverpool_2.jpg"
         buttonText="Acheter"
         onButtonClick={() => {}}
       />
@@ -28,7 +28,7 @@ function Home() {
       <BrandSection
         title="Maillots Liverpool Fc 25/26"
         description="Réunis. Déterminés."
-        imageUrl="../src/assets/images/liverpool.avif"
+        imageUrl="./images/liverpool.avif"
         buttonText="Acheter"
         onButtonClick={() => {}}
       />
