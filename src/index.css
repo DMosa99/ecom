@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+  --font-inter: Inter, sans-serif;
+  --font-poppins: Poppins, sans-serif;
+}
+
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    height: 5px;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    background: #f7f4ed;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #000000;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    cursor: grab;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
