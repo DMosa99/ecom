@@ -13,38 +13,43 @@ const loader = async () => {
   });
 };
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <App />,
+      children: [
+        {
+          index: true,
+          element: <Home />,
+          loader: loader,
+          HydrateFallback: () => null,
+        },
+        {
+          path: ":category",
+          element: <Category />,
+          loader: loader,
+          HydrateFallback: () => null,
+          children: [
+            {
+              path: ":subcategory",
+              element: <Category />,
+              loader: loader,
+              HydrateFallback: () => null,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      path: "*",
+      element: <div>Not Found</div>,
+    },
+  ],
   {
-    path: "/",
-    element: <App />,
-    children: [
-      {
-        index: true,
-        element: <Home />,
-        loader: loader,
-        HydrateFallback: () => null,
-      },
-      {
-        path: ":category",
-        element: <Category />,
-        loader: loader,
-        HydrateFallback: () => null,
-        children: [
-          {
-            path: ":subcategory",
-            element: <Category />,
-            loader: loader,
-            HydrateFallback: () => null,
-          },
-        ],
-      },
-    ],
+    basename: "/ecom",
   },
-  {
-    path: "*",
-    element: <div>Not Found</div>,
-  },
-]);
+);
 
 createRoot(document.getElementById("root")!).render(
   <LoadingBarContainer
