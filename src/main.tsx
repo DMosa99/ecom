@@ -46,9 +46,9 @@ const router = createBrowserRouter(
       element: <div>Not Found</div>,
     },
   ],
-  {
-    basename: "/ecom",
-  },
+  // {
+  //   basename: "/ecom",
+  // },
 );
 
 createRoot(document.getElementById("root")!).render(

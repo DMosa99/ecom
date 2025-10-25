@@ -11,6 +11,7 @@ import {
   LuChevronRight,
 } from "react-icons/lu";
 import { extraLinks, navLinks } from "../../data/examples";
+import Modal from "../modals/Modal";
 
 export type NavLinkProps = {
   to: To;
@@ -73,68 +74,86 @@ function Navbar() {
     });
   }, [location.pathname]);
 
+  const [open, setOpen] = useState(false);
+
   return (
-    <div
-      className={`${location.pathname == "/" ? "fixed" : "absolute"} top-0 z-50 w-full ${showNavbar ? "translate-y-0" : "-translate-y-full"} transition-transform delay-200 duration-400`}
-    >
-      <div className="flex h-10 w-full items-center justify-center bg-black">
-        <p className="font-poppins text-xs font-semibold tracking-wider text-white">
-          Retours et échanges gratuits
-        </p>
-      </div>
+    <>
       <div
-        className={`flex h-14 w-full items-center justify-between gap-6 border-b-1 border-b-gray-200 bg-white px-2 text-black lg:px-8`}
+        className={`${location.pathname == "/" ? "fixed" : "absolute"} top-0 z-50 w-full ${showNavbar ? "translate-y-0" : "-translate-y-full"} transition-transform delay-200 duration-400`}
       >
-        <div className="flex flex-1 lg:hidden">
-          <button
-            className={"px-3"}
-            onClick={() => {
-              setShowMenu(!showMenu);
-              window.scrollTo({
-                top: 0,
-              });
-            }}
-          >
-            <LuMenu className="text-xl" />
-          </button>
-          <NavLink to={"/cart"} className={"px-3"}>
-            <LuHeart className="text-xl" />
-          </NavLink>
+        <div className="flex h-10 w-full items-center justify-center bg-black">
+          <p className="font-poppins text-xs font-semibold tracking-wider text-white">
+            Retours et échanges gratuits
+          </p>
         </div>
-        <div className="mx-0 flex flex-0 lg:mx-auto lg:flex-1">
-          <NavLink to={"/"}>
-            <p className="font-poppins text-3xl font-extrabold">LOGO</p>
-          </NavLink>
+        <div
+          className={`flex h-14 w-full items-center justify-between gap-6 border-b-1 border-b-gray-200 bg-white px-2 text-black lg:px-8`}
+        >
+          <div className="flex flex-1 lg:hidden">
+            <button
+              className={"px-3"}
+              onClick={() => {
+                setShowMenu(!showMenu);
+                window.scrollTo({
+                  top: 0,
+                });
+              }}
+            >
+              <LuMenu className="text-xl" />
+            </button>
+            <NavLink to={"/cart"} className={"px-3"}>
+              <LuHeart className="text-xl" />
+            </NavLink>
+          </div>
+          <div className="mx-0 flex flex-0 lg:mx-auto lg:flex-1">
+            <NavLink to={"/"}>
+              <p className="font-poppins text-3xl font-extrabold">LOGO</p>
+            </NavLink>
+          </div>
+          <div className="peer z-10 hidden h-full translate-y-[1px] flex-row tracking-widest uppercase lg:flex">
+            {navLinks.map((nav, index) => (
+              <NavItem key={index} nav={nav} setHovered={setHovered} />
+            ))}
+          </div>
+          <div className="flex flex-1 flex-row items-center justify-end">
+            <Search />
+            <div
+              onClick={() => setOpen(true)}
+              className={"px-3 hover:cursor-pointer"}
+            >
+              <LuUser className="text-xl" />
+            </div>
+            <NavLink to={"/wishlist"} className={"group hidden px-3 lg:block"}>
+              <LuHeart className="text-xl group-hover:fill-red-600 group-hover:text-red-600" />
+            </NavLink>
+            <NavLink to={"/search"} className={"block px-3 lg:hidden"}>
+              <LuSearch className="text-xl" />
+            </NavLink>
+            <NavLink to={"/cart"} className={"px-3"}>
+              <LuShoppingBag className="text-xl" />
+            </NavLink>
+          </div>
+          <MoreDetailsMenu hovered={hovered} />
+          <DrawerMenu
+            showMenu={showMenu}
+            setShowMenu={setShowMenu}
+            navLinks={navLinks}
+            extraLinks={extraLinks}
+          />
         </div>
-        <div className="peer z-10 hidden h-full translate-y-[1px] flex-row tracking-widest uppercase lg:flex">
-          {navLinks.map((nav, index) => (
-            <NavItem key={index} nav={nav} setHovered={setHovered} />
-          ))}
-        </div>
-        <div className="flex flex-1 flex-row items-center justify-end">
-          <Search />
-          <NavLink to={"/profile"} className={"px-3"}>
-            <LuUser className="text-xl" />
-          </NavLink>
-          <NavLink to={"/wishlist"} className={"group hidden px-3 lg:block"}>
-            <LuHeart className="text-xl group-hover:fill-red-600 group-hover:text-red-600" />
-          </NavLink>
-          <NavLink to={"/search"} className={"block px-3 lg:hidden"}>
-            <LuSearch className="text-xl" />
-          </NavLink>
-          <NavLink to={"/cart"} className={"px-3"}>
-            <LuShoppingBag className="text-xl" />
-          </NavLink>
-        </div>
-        <MoreDetailsMenu hovered={hovered} />
-        <DrawerMenu
-          showMenu={showMenu}
-          setShowMenu={setShowMenu}
-          navLinks={navLinks}
-          extraLinks={extraLinks}
-        />
       </div>
-    </div>
+      <Modal visible={open} close={() => setOpen(false)}>
+        <div className="flex flex-col gap-4">
+          <p className="font-poppins w-2/3 text-3xl font-bold">
+            CONNECTE-TOI OU INSCRIS-TOI
+          </p>
+          <p className="font-poppins text-sm font-light">
+            Profite d'un accès réservé aux membres aux produits exclusifs,
+            expériences, offres et plus encore.
+          </p>
+        </div>
+      </Modal>
+    </>
   );
 }
 
