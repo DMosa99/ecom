@@ -18,6 +18,7 @@ import { BsArrowRight, BsBag } from "react-icons/bs";
 import { validateEmail } from "../../utils/validations";
 import OutlinedButton from "../common/OutlinedButton";
 import { IoLogoApple, IoLogoFacebook, IoLogoGoogle } from "react-icons/io5";
+import CheckBox from "../common/CheckBox";
 
 export type NavLinkProps = {
   to: To;
@@ -136,7 +137,7 @@ function Navbar() {
               <LuSearch className="text-xl" />
             </NavLink>
             <NavLink to={"/cart"} className={"px-3"}>
-              <BsBag className="text-xl" />
+              <BsBag className="text-xl" strokeWidth={0.2} />
             </NavLink>
           </div>
           <MoreDetailsMenu hovered={hovered} />
@@ -281,6 +282,8 @@ const Search = () => {
 const SignInModalContent = () => {
   const [form, setForm] = useState({
     email: "",
+    keepConnected: false,
+    receiveNews: false,
   });
   const [errors, setErrors] = useState({
     email: "",
@@ -303,9 +306,9 @@ const SignInModalContent = () => {
     }, 1000);
   };
   return (
-    <div className="flex flex-col items-start justify-start gap-4">
+    <div className="flex flex-col items-start justify-start gap-5">
       <div className="mb-2 flex flex-col gap-3">
-        <p className="font-poppins w-2/3 text-3xl font-bold">
+        <p className="font-poppins w-2/3 text-3xl font-semibold">
           CONNECTE-TOI OU INSCRIS-TOI
         </p>
         <p className="font-poppins text-sm font-light tracking-wider">
@@ -329,6 +332,14 @@ const SignInModalContent = () => {
           });
         }}
         error={errors.email}
+      />
+      <CheckBox
+        text="Oui, je souhaite recevoir les dernières offres et nouveautés concernant les produits logo au moyen des publicités qui s'affichent sur les médias numériques en fonction de mes interactions avec adidas sur des plateformes telles que Google et Facebook. Je peux choisir de ne plus partager mes données personnelles à tout moment."
+        toggle={(value) => setForm({ ...form, receiveNews: value })}
+      />
+      <CheckBox
+        text="Rester connecté(e). S'applique à toutes les options."
+        toggle={(value) => setForm({ ...form, keepConnected: value })}
       />
       <Button
         name={"CONTINUER"}

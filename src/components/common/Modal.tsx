@@ -26,11 +26,11 @@ function Modal({ visible, close, children }: Props) {
           onClick={(e) => e.stopPropagation()}
           className={`max-h-1/2 overflow-y-scroll px-6 py-10`}
         >
-          {/* <div className="mb-6 flex w-full items-center justify-between">
-            <p className="font-poppins text-3xl font-extrabold text-black">
+          <div className="mb-6 flex w-full items-center justify-between">
+            <p className="font-poppins text-3xl font-bold text-black italic">
               LOGO
             </p>
-          </div> */}
+          </div>
           {children}
         </div>
       </div>
