@@ -302,6 +302,7 @@ const SignInModalContent = () => {
     }
     setTimeout(() => {
       setLoading(false);
+      sessionStorage.setItem(`email`, form.email);
       console.log(`Simulated sign-in complete for ${form.email}`);
     }, 1000);
   };

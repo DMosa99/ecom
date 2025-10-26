@@ -3,7 +3,10 @@ import App from "./App.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import Home from "./app/Home.tsx";
 import { LoadingBarContainer } from "react-top-loading-bar";
-import Category from "./app/Category.tsx";
+import Category from "./app/category/Category.tsx";
+import About from "./app/About.tsx";
+import Cart from "./app/Cart.tsx";
+import Favorites from "./app/Favorites.tsx";
 
 const loader = async () => {
   return new Promise((resolve) => {
@@ -38,6 +41,24 @@ const router = createBrowserRouter(
               HydrateFallback: () => null,
             },
           ],
+        },
+        {
+          path: "/cart",
+          element: <Cart />,
+          loader: loader,
+          HydrateFallback: () => null,
+        },
+        {
+          path: "/wishlist",
+          element: <Favorites />,
+          loader: loader,
+          HydrateFallback: () => null,
+        },
+        {
+          path: "/about-us",
+          element: <About />,
+          loader: loader,
+          HydrateFallback: () => null,
         },
       ],
     },

@@ -1,10 +1,10 @@
 import { useParams } from "react-router";
-import OutlinedButton from "../components/common/OutlinedButton";
+import OutlinedButton from "../../components/common/OutlinedButton";
 import { IoFilter } from "react-icons/io5";
-import Breadcrumb from "../components/layout/Breadcrumb";
-import Seemore from "../components/common/Seemore";
-import type { Product } from "./Home";
-import { products } from "../data/examples";
+import Breadcrumb from "../../components/layout/Breadcrumb";
+import Seemore from "../../components/common/Seemore";
+import type { Product } from "../Home";
+import { products } from "../../data/examples";
 import { useState } from "react";
 
 function Category() {

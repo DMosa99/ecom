@@ -269,7 +269,7 @@ export const footerLinks = [
   {
     title: "Entreprise",
     links: [
-      { name: "À propos", link: "/a-propos" },
+      { name: "À propos", link: "/about-us" },
       { name: "Carrières", link: "/carrieres" },
       { name: "Responsabilité sociale", link: "/responsabilite-sociale" },
       { name: "Conditions d'utilisation", link: "/conditions-utilisation" },
