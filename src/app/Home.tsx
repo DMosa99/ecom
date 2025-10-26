@@ -2,7 +2,7 @@ import { LuHeart } from "react-icons/lu";
 import { exampleProducts } from "../data/examples";
 import { useRef, useState } from "react";
 import { BsArrowRight, BsArrowLeft } from "react-icons/bs";
-import Button from "../components/buttons/Button";
+import Button from "../components/common/Button";
 
 export type Product = {
   id: number;
@@ -68,7 +68,12 @@ const BrandSection = ({
         <div className="font-poppins mb-4 bg-white px-2 py-1 text-xs font-light tracking-wider text-black lg:text-sm">
           <p>{description}</p>
         </div>
-        <Button name={buttonText} onClick={onButtonClick} icon={BsArrowRight} />
+        <Button
+          name={buttonText}
+          onClick={onButtonClick}
+          icon={BsArrowRight}
+          theme="dark"
+        />
       </div>
     </div>
   );
@@ -77,7 +82,7 @@ const BrandSection = ({
 const BecomeAMemberSection = () => {
   return (
     <div className="w-full bg-sky-600">
-      <div className="container mx-auto flex flex-col items-center gap-6 px-6 py-10">
+      <div className="container mx-auto flex flex-col items-center justify-center gap-6 px-6 py-10">
         <p className="font-poppins text-center text-2xl font-bold tracking-wider text-white uppercase">
           Devenez membre et gagnez 100 points et un bon de 10 % à dépenser en
           récompenses

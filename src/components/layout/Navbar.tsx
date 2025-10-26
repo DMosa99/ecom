@@ -11,7 +11,13 @@ import {
   LuChevronRight,
 } from "react-icons/lu";
 import { extraLinks, navLinks } from "../../data/examples";
-import Modal from "../modals/Modal";
+import Modal from "../common/Modal";
+import Input from "../common/Input";
+import Button from "../common/Button";
+import { BsArrowRight, BsBag } from "react-icons/bs";
+import { validateEmail } from "../../utils/validations";
+import OutlinedButton from "../common/OutlinedButton";
+import { IoLogoApple, IoLogoFacebook, IoLogoGoogle } from "react-icons/io5";
 
 export type NavLinkProps = {
   to: To;
@@ -130,7 +136,7 @@ function Navbar() {
               <LuSearch className="text-xl" />
             </NavLink>
             <NavLink to={"/cart"} className={"px-3"}>
-              <LuShoppingBag className="text-xl" />
+              <BsBag className="text-xl" />
             </NavLink>
           </div>
           <MoreDetailsMenu hovered={hovered} />
@@ -143,15 +149,7 @@ function Navbar() {
         </div>
       </div>
       <Modal visible={open} close={() => setOpen(false)}>
-        <div className="flex flex-col gap-4">
-          <p className="font-poppins w-2/3 text-3xl font-bold">
-            CONNECTE-TOI OU INSCRIS-TOI
-          </p>
-          <p className="font-poppins text-sm font-light">
-            Profite d'un accès réservé aux membres aux produits exclusifs,
-            expériences, offres et plus encore.
-          </p>
-        </div>
+        <SignInModalContent />
       </Modal>
     </>
   );
@@ -270,12 +268,74 @@ const Search = () => {
   return (
     <div className="relative hidden lg:block">
       <input
-        className="font-inter mx-4 rounded-none border-1 border-gray-200 bg-gray-100 py-[6px] pr-10 pl-3 text-xs font-light tracking-wider placeholder:text-gray-600"
+        className="font-poppins mx-4 rounded-none border-1 border-gray-200 bg-gray-100 py-[6px] pr-10 pl-3 text-xs font-light tracking-wider placeholder:text-gray-600 focus:border-black focus:outline-none"
         placeholder="Rechercher"
       />
       <button className="hover:cursor-pointer">
         <LuSearch className="absolute top-1/2 right-6 -translate-y-1/2 text-base text-gray-600" />
       </button>
+    </div>
+  );
+};
+
+const SignInModalContent = () => {
+  const [form, setForm] = useState({
+    email: "",
+  });
+  const [errors, setErrors] = useState({
+    email: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const signin = () => {
+    setLoading(true);
+    const emailValid = validateEmail(form.email);
+    setErrors({
+      ...errors,
+      email: emailValid ? "" : "Saisis une adresse e-mail valide",
+    });
+    if (!emailValid) {
+      setLoading(false);
+      return;
+    }
+    setTimeout(() => {
+      setLoading(false);
+      console.log(`Simulated sign-in complete for ${form.email}`);
+    }, 1000);
+  };
+  return (
+    <div className="flex flex-col items-start justify-start gap-4">
+      <div className="mb-2 flex flex-col gap-3">
+        <p className="font-poppins w-2/3 text-3xl font-bold">
+          CONNECTE-TOI OU INSCRIS-TOI
+        </p>
+        <p className="font-poppins text-sm font-light tracking-wider">
+          Profite d'un accès réservé aux membres aux produits exclusifs,
+          expériences, offres et plus encore.
+        </p>
+      </div>
+      {/* <div className="flex gap-2">
+        <OutlinedButton onClick={() => {}} icon={IoLogoGoogle} />
+        <OutlinedButton onClick={() => {}} icon={IoLogoFacebook} />
+        <OutlinedButton onClick={() => {}} icon={IoLogoApple} />
+      </div> */}
+      <Input
+        onChangeText={(value) => setForm({ ...form, email: value })}
+        onBlur={() => {
+          setErrors({
+            ...errors,
+            email: !validateEmail(form.email)
+              ? `Saisis une adresse e-mail valide`
+              : ``,
+          });
+        }}
+        error={errors.email}
+      />
+      <Button
+        name={"CONTINUER"}
+        onClick={signin}
+        icon={BsArrowRight}
+        loading={loading}
+      />
     </div>
   );
 };
