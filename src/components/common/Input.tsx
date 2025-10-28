@@ -2,14 +2,15 @@ interface Props {
   onChangeText: (value: string) => void;
   onBlur: () => void;
   error?: string;
+  placeholder: string;
 }
 
-function Input({ onChangeText, onBlur, error }: Props) {
+function Input({ onChangeText, onBlur, error, placeholder }: Props) {
   return (
     <div className="flex w-full flex-1 flex-col gap-2">
       <input
         className={`font-poppins box-border w-full border-1 border-gray-500 p-3 text-sm font-light focus:border-b-2 ${error ? `border-b-2 border-b-red-600` : `border-b-black hover:border-black focus:border-black`} focus:outline-none`}
-        placeholder="Email"
+        placeholder={placeholder}
         onChange={(e) => onChangeText(e.target.value)}
         onBlur={onBlur}
       />

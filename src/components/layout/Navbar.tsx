@@ -3,7 +3,7 @@ import { NavLink, useLocation, useNavigation, type To } from "react-router";
 import { useLoadingBar } from "react-top-loading-bar";
 import {
   LuUser,
-  LuShoppingBag,
+  // LuShoppingBag,
   LuHeart,
   LuMenu,
   LuSearch,
@@ -16,9 +16,10 @@ import Input from "../common/Input";
 import Button from "../common/Button";
 import { BsArrowRight, BsBag } from "react-icons/bs";
 import { validateEmail } from "../../utils/validations";
-import OutlinedButton from "../common/OutlinedButton";
-import { IoLogoApple, IoLogoFacebook, IoLogoGoogle } from "react-icons/io5";
+// import OutlinedButton from "../common/OutlinedButton";
+// import { IoLogoApple, IoLogoFacebook, IoLogoGoogle } from "react-icons/io5";
 import CheckBox from "../common/CheckBox";
+import { useLogin } from "../../hooks/useAuth";
 
 export type NavLinkProps = {
   to: To;
@@ -150,7 +151,7 @@ function Navbar() {
         </div>
       </div>
       <Modal visible={open} close={() => setOpen(false)}>
-        <SignInModalContent />
+        <SignInModalContent close={() => setOpen(false)} />
       </Modal>
     </>
   );
@@ -279,33 +280,37 @@ const Search = () => {
   );
 };
 
-const SignInModalContent = () => {
+const SignInModalContent = ({ close }: { close: () => void }) => {
   const [form, setForm] = useState({
     email: "",
+    password: "",
     keepConnected: false,
     receiveNews: false,
   });
   const [errors, setErrors] = useState({
     email: "",
+    password: "",
   });
-  const [loading, setLoading] = useState(false);
+
+  const loginMutation = useLogin();
+
+  useEffect(() => {
+    if (loginMutation.isSuccess) close();
+  }, [loginMutation.isSuccess]);
+
   const signin = () => {
-    setLoading(true);
     const emailValid = validateEmail(form.email);
     setErrors({
       ...errors,
       email: emailValid ? "" : "Saisis une adresse e-mail valide",
     });
-    if (!emailValid) {
-      setLoading(false);
-      return;
-    }
-    setTimeout(() => {
-      setLoading(false);
-      sessionStorage.setItem(`email`, form.email);
-      console.log(`Simulated sign-in complete for ${form.email}`);
-    }, 1000);
+    if (!emailValid) return;
+    loginMutation.mutate({
+      email: form.email,
+      password: form.password,
+    });
   };
+
   return (
     <div className="flex flex-col items-start justify-start gap-5">
       <div className="mb-2 flex flex-col gap-3">
@@ -323,6 +328,7 @@ const SignInModalContent = () => {
         <OutlinedButton onClick={() => {}} icon={IoLogoApple} />
       </div> */}
       <Input
+        placeholder="Email"
         onChangeText={(value) => setForm({ ...form, email: value })}
         onBlur={() => {
           setErrors({
@@ -333,6 +339,19 @@ const SignInModalContent = () => {
           });
         }}
         error={errors.email}
+      />
+      <Input
+        placeholder="Mot de passe"
+        onChangeText={(value) => setForm({ ...form, password: value })}
+        onBlur={() => {
+          setErrors({
+            ...errors,
+            email: !validateEmail(form.email)
+              ? `Saisis un mot de passe valide`
+              : ``,
+          });
+        }}
+        error={errors.password}
       />
       <CheckBox
         text="Oui, je souhaite recevoir les dernières offres et nouveautés concernant les produits logo au moyen des publicités qui s'affichent sur les médias numériques en fonction de mes interactions avec adidas sur des plateformes telles que Google et Facebook. Je peux choisir de ne plus partager mes données personnelles à tout moment."
@@ -346,7 +365,7 @@ const SignInModalContent = () => {
         name={"CONTINUER"}
         onClick={signin}
         icon={BsArrowRight}
-        loading={loading}
+        loading={loginMutation.isPending}
       />
     </div>
   );

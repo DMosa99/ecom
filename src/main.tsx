@@ -7,6 +7,7 @@ import Category from "./app/category/Category.tsx";
 import About from "./app/About.tsx";
 import Cart from "./app/Cart.tsx";
 import Favorites from "./app/Favorites.tsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const loader = async () => {
   return new Promise((resolve) => {
@@ -72,16 +73,20 @@ const router = createBrowserRouter(
   // },
 );
 
+const queryClient = new QueryClient();
+
 createRoot(document.getElementById("root")!).render(
-  <LoadingBarContainer
-    props={{
-      color: "#ffffff",
-      height: 2,
-      shadow: false,
-      waitingTime: 500,
-      transitionTime: 200,
-    }}
-  >
-    <RouterProvider router={router} />
-  </LoadingBarContainer>,
+  <QueryClientProvider client={queryClient}>
+    <LoadingBarContainer
+      props={{
+        color: "#ffffff",
+        height: 2,
+        shadow: false,
+        waitingTime: 500,
+        transitionTime: 200,
+      }}
+    >
+      <RouterProvider router={router} />
+    </LoadingBarContainer>
+  </QueryClientProvider>,
 );
