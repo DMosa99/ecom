@@ -9,9 +9,6 @@ export const useLogin = () => {
     { email: string; password: string }
   >({
     mutationFn: ({ email, password }) => login(email, password),
-    onSuccess: (data) => {
-      localStorage.setItem("token", data.token);
-    },
   });
 };
 

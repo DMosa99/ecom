@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
-import { NavLink, useLocation, useNavigation, type To } from "react-router";
+import {
+  NavLink,
+  useLocation,
+  useNavigate,
+  useNavigation,
+  type To,
+} from "react-router";
 import { useLoadingBar } from "react-top-loading-bar";
 import {
   LuUser,
-  // LuShoppingBag,
   LuHeart,
   LuMenu,
   LuSearch,
@@ -11,15 +16,8 @@ import {
   LuChevronRight,
 } from "react-icons/lu";
 import { extraLinks, navLinks } from "../../data/examples";
-import Modal from "../common/Modal";
-import Input from "../common/Input";
-import Button from "../common/Button";
-import { BsArrowRight, BsBag } from "react-icons/bs";
-import { validateEmail } from "../../utils/validations";
-// import OutlinedButton from "../common/OutlinedButton";
-// import { IoLogoApple, IoLogoFacebook, IoLogoGoogle } from "react-icons/io5";
-import CheckBox from "../common/CheckBox";
-import { useLogin } from "../../hooks/useAuth";
+import { BsBag } from "react-icons/bs";
+import LoginModal from "./LoginModal";
 
 export type NavLinkProps = {
   to: To;
@@ -32,11 +30,13 @@ export type NavLinkProps = {
 
 function Navbar() {
   const [showNavbar, setShowNavbar] = useState(true);
+  const [showLogin, setShowLogin] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [hovered, setHovered] = useState<NavLinkProps>(navLinks[0]);
   const [showMenu, setShowMenu] = useState(false);
   const location = useLocation();
   const navigation = useNavigation();
+  const navigate = useNavigate();
   const { start, complete } = useLoadingBar();
 
   //* This effect handles the visibility of the navbar based on scroll direction.
@@ -82,8 +82,6 @@ function Navbar() {
     });
   }, [location.pathname]);
 
-  const [open, setOpen] = useState(false);
-
   return (
     <>
       <div
@@ -126,7 +124,13 @@ function Navbar() {
           <div className="flex flex-1 flex-row items-center justify-end">
             <Search />
             <div
-              onClick={() => setOpen(true)}
+              onClick={() => {
+                if (localStorage.getItem("token")) {
+                  navigate("/profile");
+                } else {
+                  setShowLogin(true);
+                }
+              }}
               className={"px-3 hover:cursor-pointer"}
             >
               <LuUser className="text-xl" />
@@ -150,9 +154,7 @@ function Navbar() {
           />
         </div>
       </div>
-      <Modal visible={open} close={() => setOpen(false)}>
-        <SignInModalContent close={() => setOpen(false)} />
-      </Modal>
+      <LoginModal visible={showLogin} close={() => setShowLogin(false)} />
     </>
   );
 }
@@ -276,97 +278,6 @@ const Search = () => {
       <button className="hover:cursor-pointer">
         <LuSearch className="absolute top-1/2 right-6 -translate-y-1/2 text-base text-gray-600" />
       </button>
-    </div>
-  );
-};
-
-const SignInModalContent = ({ close }: { close: () => void }) => {
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-    keepConnected: false,
-    receiveNews: false,
-  });
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-  });
-
-  const loginMutation = useLogin();
-
-  useEffect(() => {
-    if (loginMutation.isSuccess) close();
-  }, [loginMutation.isSuccess]);
-
-  const signin = () => {
-    const emailValid = validateEmail(form.email);
-    setErrors({
-      ...errors,
-      email: emailValid ? "" : "Saisis une adresse e-mail valide",
-    });
-    if (!emailValid) return;
-    loginMutation.mutate({
-      email: form.email,
-      password: form.password,
-    });
-  };
-
-  return (
-    <div className="flex flex-col items-start justify-start gap-5">
-      <div className="mb-2 flex flex-col gap-3">
-        <p className="font-poppins w-2/3 text-3xl font-semibold">
-          CONNECTE-TOI OU INSCRIS-TOI
-        </p>
-        <p className="font-poppins text-sm font-light tracking-wider">
-          Profite d'un accès réservé aux membres aux produits exclusifs,
-          expériences, offres et plus encore.
-        </p>
-      </div>
-      {/* <div className="flex gap-2">
-        <OutlinedButton onClick={() => {}} icon={IoLogoGoogle} />
-        <OutlinedButton onClick={() => {}} icon={IoLogoFacebook} />
-        <OutlinedButton onClick={() => {}} icon={IoLogoApple} />
-      </div> */}
-      <Input
-        placeholder="Email"
-        onChangeText={(value) => setForm({ ...form, email: value })}
-        onBlur={() => {
-          setErrors({
-            ...errors,
-            email: !validateEmail(form.email)
-              ? `Saisis une adresse e-mail valide`
-              : ``,
-          });
-        }}
-        error={errors.email}
-      />
-      <Input
-        placeholder="Mot de passe"
-        onChangeText={(value) => setForm({ ...form, password: value })}
-        onBlur={() => {
-          setErrors({
-            ...errors,
-            email: !validateEmail(form.email)
-              ? `Saisis un mot de passe valide`
-              : ``,
-          });
-        }}
-        error={errors.password}
-      />
-      <CheckBox
-        text="Oui, je souhaite recevoir les dernières offres et nouveautés concernant les produits logo au moyen des publicités qui s'affichent sur les médias numériques en fonction de mes interactions avec adidas sur des plateformes telles que Google et Facebook. Je peux choisir de ne plus partager mes données personnelles à tout moment."
-        toggle={(value) => setForm({ ...form, receiveNews: value })}
-      />
-      <CheckBox
-        text="Rester connecté(e). S'applique à toutes les options."
-        toggle={(value) => setForm({ ...form, keepConnected: value })}
-      />
-      <Button
-        name={"CONTINUER"}
-        onClick={signin}
-        icon={BsArrowRight}
-        loading={loginMutation.isPending}
-      />
     </div>
   );
 };
